@@ -5,7 +5,7 @@ Portfolio DevOps untuk mendemonstrasikan alur deployment aplikasi container ke V
 - Aplikasi Node.js tanpa dependency eksternal.
 - Dockerfile production dengan health check.
 - Docker Compose untuk lokal dan VPS.
-- GitHub Actions untuk test, build image, push ke GHCR, lalu deploy via SSH.
+- Template GitHub Actions untuk test, build image, push ke GHCR, lalu deploy via SSH.
 - Endpoint `/health` untuk monitoring sederhana.
 
 ## Demo Lokal
@@ -33,7 +33,7 @@ docker compose up --build
 
 ```text
 .
-+-- .github/workflows/ci-cd.yml
++-- docs/github-actions-ci-cd.yml
 +-- Dockerfile
 +-- docker-compose.yml
 +-- docker-compose.prod.yml
@@ -45,6 +45,11 @@ docker compose up --build
 ```
 
 ## Alur CI/CD
+
+Template workflow tersedia di `docs/github-actions-ci-cd.yml`. File ini sengaja
+disimpan sebagai dokumentasi agar repository tetap bisa dipush dengan token GitHub
+yang belum memiliki scope `workflow`. Setelah token GitHub diperbarui, salin file
+tersebut ke `.github/workflows/ci-cd.yml` untuk mengaktifkan pipeline.
 
 1. Developer push ke branch `main`.
 2. GitHub Actions menjalankan `npm ci` dan `npm test`.
