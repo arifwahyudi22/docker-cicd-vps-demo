@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Docker CI/CD VPS Demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Portfolio DevOps</p>
+          <h1 id="page-title">Docker CI/CD VPS Demo</h1>
+          <p class="lead">
+            Aplikasi ringan untuk mendemonstrasikan alur build container,
+            push image, deploy otomatis ke VPS, health check, dan rollback sederhana.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="/health">Health JSON</a>
+            <a class="button secondary" href="https://github.com/" rel="noreferrer">Repository</a>
+          </div>
+        </div>
+
+        <div class="pipeline" aria-label="Deployment pipeline">
+          <div class="node source">
+            <span class="icon">01</span>
+            <strong>Git Push</strong>
+            <small>main branch</small>
+          </div>
+          <div class="connector"></div>
+          <div class="node build">
+            <span class="icon">02</span>
+            <strong>CI Build</strong>
+            <small>test + image</small>
+          </div>
+          <div class="connector"></div>
+          <div class="node deploy">
+            <span class="icon">03</span>
+            <strong>VPS Deploy</strong>
+            <small>Docker Compose</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="status-grid" aria-label="Deployment status">
+        <article>
+          <span>Runtime</span>
+          <strong>Node.js 22</strong>
+        </article>
+        <article>
+          <span>Container</span>
+          <strong>Alpine Linux</strong>
+        </article>
+        <article>
+          <span>Expose</span>
+          <strong>Port 3000</strong>
+        </article>
+        <article>
+          <span>Probe</span>
+          <strong>/health</strong>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

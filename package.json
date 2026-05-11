@@ -1,0 +1,23 @@
+{
+  "name": "docker-cicd-vps-demo",
+  "version": "1.0.0",
+  "description": "Portfolio demo for Docker based CI/CD deployment to a VPS.",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "docker",
+    "ci-cd",
+    "vps",
+    "portfolio",
+    "devops"
+  ],
+  "author": "Arif",
+  "license": "MIT"
+}
