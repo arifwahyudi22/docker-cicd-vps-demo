@@ -1,4 +1,4 @@
-name: CI/CD to VPS
+name: Deploy to VPS
 
 on:
   push:
@@ -79,7 +79,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check VPS configuration
+        id: config
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          if [ -n "$VPS_HOST" ] && [ -n "$VPS_USER" ] && [ -n "$VPS_SSH_KEY" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+            echo "VPS deployment is configured."
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            echo "VPS secrets are not configured. Build and image publish completed."
+          fi
+
       - name: Prepare SSH
+        if: steps.config.outputs.deploy == 'true'
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
@@ -91,6 +107,7 @@ jobs:
           ssh-keyscan -p "$VPS_PORT" "$VPS_HOST" >> ~/.ssh/known_hosts
 
       - name: Upload deployment files
+        if: steps.config.outputs.deploy == 'true'
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
@@ -101,6 +118,7 @@ jobs:
           scp -i ~/.ssh/id_ed25519 -P "$VPS_PORT" docker-compose.prod.yml scripts/deploy.sh "$VPS_USER@$VPS_HOST:$APP_DIR/"
 
       - name: Run deployment
+        if: steps.config.outputs.deploy == 'true'
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
@@ -114,3 +132,9 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_ed25519 -p "$VPS_PORT" "$VPS_USER@$VPS_HOST" \
             "cd '$APP_DIR' && chmod +x deploy.sh && IMAGE='$IMAGE' APP_VERSION='$APP_VERSION' COMMIT_SHA='$COMMIT_SHA' GHCR_USERNAME='$GHCR_USERNAME' GHCR_TOKEN='$GHCR_TOKEN' ./deploy.sh"
+
+      - name: Mark build-only demo success
+        if: steps.config.outputs.deploy != 'true'
+        run: |
+          echo "Deploy job completed in build-only mode."
+          echo "Add VPS_HOST, VPS_USER, and VPS_SSH_KEY repository secrets to enable real VPS deployment."
